@@ -1,0 +1,33 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!doctype html>
+<html lang="kr">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" type="image/x-icon" href="~/images/favicon.ico" />
+    <title>Sign In</title>
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/logon.css?2")">
+</head>
+<body>
+
+    <form class="signUp" id="signupForm" action="Authenticate">
+        <img src="~/images/Logo.jpg" style="width:200px;height:100px; padding-left:40px; padding-bottom:35px"/>
+        <input type="text" id="userId" name="userId" class="signUpInput" placeholder="Type your user id" autofocus required>
+        <input type="password" id="passwd" name="passwd"  class="signUpInput" placeholder="Choose a password" required>
+        <input type="submit" value="Log-In" class="signUpButton">
+        @if (@ViewData["strError"] == null || @ViewData["strError"] == "0")
+        {
+        }
+        else
+        {
+            <p>
+                @Html.Raw(ViewData["strError"].ToString())
+            </p>
+        }
+    </form>
+
+</body>
+</html>

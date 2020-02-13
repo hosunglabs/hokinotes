@@ -1,0 +1,146 @@
+﻿
+
+@{
+    ViewBag.Title = "hosungnotes write";
+    Layout = "~/Views/Shared/_Write.cshtml";
+}
+@section headJS{
+    <script language="javascript">
+        function OnSubmit() {
+            if ($("#txtLabel").val().trim() == '') {
+                alert('라벨명을 입력 하세요.');
+                return;
+            }
+
+            if ($("#txtSubject").val().trim() == '') {
+                alert('제목을 입력 하세요.');
+                return;
+            }
+
+            if ($("#txtComment").val().trim() == '') {
+                alert('내용을 입력 하세요.');
+                return;
+            }
+
+            if (confirm('등록 하시겠습니까?')) {
+                $("#form1").submit();
+            }
+            else
+                return;
+        }
+    </script>
+    <script type="text/javascript">
+
+        var $textBox;
+
+        $(document).ready(function () {
+            $textBox = $("#txtComment");
+
+            function saveSelection() {
+                $textBox.data("lastSelection", $textBox.getSelection());
+            }
+
+            $textBox.focusout(saveSelection);
+
+            $textBox.bind("beforedeactivate", function () {
+                saveSelection();
+                $textBox.unbind("focusout");
+            });
+        });
+
+        function insertText(text) {
+            var selection = $textBox.data("lastSelection");
+            $textBox.focus();
+            $textBox.setSelection(selection.start, selection.end);
+            $textBox.replaceSelectedText(text);
+        }
+
+        $(function () {
+            $('#btnUpload').click(function (e) {
+                e.preventDefault();
+                $('#imgFile').click();
+            });
+        });
+
+        function changeValue(obj) {
+
+            if (obj.value != '') {
+                uploadImageFile();
+
+                if ($.browser.msie) {
+                    $("#imgFile").replaceWith($("#imgFile").clone(true));
+                }
+                else {      
+                    $("#imgFile").val("");
+                }
+
+            }
+        }
+
+
+        function uploadImageFile() {
+            var form = $('#fileForm')[0];
+
+            var formData = new FormData(form);
+            formData.append("imgFile", $("#imgFile")[0].files[0]);
+            $.ajax({
+                url: '/Book/UploadFile',
+                processData: false,
+                contentType: false,
+                data: formData,
+                type: 'POST',
+                success: function (result) {
+                    if (result.isSuccess) {
+                        insertText("<img src='/uploadfiles/" + result.msg + "' width='1180px' />");
+                    }
+                    else {
+                        alert(result.msg);
+                    }
+                }
+            });
+        }
+    </script>
+
+}
+
+
+<div id="sub">
+    <div class="boardarea">
+        <form id="form1" method="post" action="/book/write">
+            <table class="board_table" cellpadding="0" cellspacing="0">
+                <colgroup class="xans-element- xans-board xans-board-listheader-1002 xans-board-listheader xans-board-1002 ">
+                    <col style="width:100%;" />
+                </colgroup>
+                <tbody class="write">
+                    <tr>
+                        <td>
+                            <input type="text" class="inputbox" id="txtLabel" name="txtLabel" placeholder="#라벨명" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="text" class="inputbox" id="txtSubject" name="txtSubject" placeholder="제목" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <textarea rows="35" class="textarea" id="txtComment" name="txtComment"></textarea>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="submit_button">
+                <img src="~/Images/plus.png" style="width:55px;height:40px;" id="btnUpload" name="btnUpload" />
+                <img src="~/Images/save.png" style="width:35px;height:35px" id="btnSave" name="btnSave" onclick="OnSubmit();" />&nbsp;
+                <img src="~/Images/cancel.jpg" style="width:35px;height:35px" onclick="javascript:history.back(-1);" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div style="display:none;">
+    <form id="fileForm" name="fileForm" method="post"  enctype="multipart/form-data">
+        <input type="file" value="file select" id="imgFile" name="imgFile" onchange="changeValue(this);" />
+    </form>
+</div>

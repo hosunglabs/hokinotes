@@ -1,0 +1,56 @@
+﻿
+@{
+    Layout = null;
+}
+@{
+    var LableList = ViewBag.LabelList as System.Data.DataRowCollection;
+}
+<html>
+<head>
+    <title>HosungNotes</title>
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/main.css?34")">
+    <link rel="shortcut icon" type="image/x-icon" href="~/images/favicon.ico" />
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-1.9.1.js")"></script>
+    <script language="javascript" type="text/javascript">
+        var onSubmit = function () {
+
+            //if ($.trim($("#txtSearch").val()) == "") {
+            //    alert('검색어를 입력 하세요.');
+            //    return false;
+            //}
+            return true;
+        }
+
+        $(document).ready(function () {
+
+            $('#txtSearch').keydown(function (event) {
+                var keypressed = event.keyCode || event.which;
+                if (keypressed == 13) {
+                    $('#sform').submit();
+                }
+            });
+
+        });
+
+
+        var LabelSearch = function (labelName) {
+            $("#txtSearch").val(labelName);
+            $('#sform').submit();
+        }
+    </script>
+</head>
+<body>
+    <div id="body">
+        <img id="logo" src="@Url.Content("~/images/logo.jpg")">
+        <form name="sform" id="sform" method="post" action="/Search/Main">
+            <input id="txtSearch" type="text" class="main_text_box" name="txtSearch"/>
+            <div class="search_bar">
+                @foreach (System.Data.DataRow row in LableList)
+        {
+            <input class="search_button" type="button" onclick="LabelSearch('@row["LabelName"]');" value="@row["LabelName"]">
+}
+            </div>
+        </form>
+    </div>
+</body>
+</html>

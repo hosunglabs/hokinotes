@@ -1,0 +1,153 @@
+﻿@using hosungnotes.Models;
+
+@{
+    var SearchOptionView = ViewBag.SearchOptionView as hosungnotes.Models.SearchOptionView;
+    var Pagination = ViewBag.Pagination as hosungnotes.Models.Pager;
+    var LableList = ViewBag.LabelList as System.Data.DataRowCollection;
+}
+
+@model hosungnotes.Models.SearchResult
+
+@{
+    ViewBag.Title = "hosungnotes";
+    Layout = "~/Views/Shared/_Default.cshtml";
+}
+@section headJS{
+    <script language="javascript" type="text/javascript">
+        var LabelSearch = function (labelName) {
+            $("#txtSearch").val(labelName);
+            document.sform.submit();
+        }
+    </script>
+}
+<div id="header" class="darkblue-skin2">
+    <div id="headerWrap">
+        <h1 class="logo"><a href="/Search"><img src="/images/titlelogo2.png" style="width:246px;height:66px" alt="hosungnotes"></a>&nbsp;&nbsp;</h1>
+        <div id="bpa_search">
+            <h2 class="hide">search</h2>
+            <form name="sform" id="sform" onsubmit="javascript:return (onSubmit());" method="post">
+                <fieldset>
+                    <legend>통합검색</legend>
+                    <div class="searchFrm">
+                        <input type="text" value="@SearchOptionView.TxtSearch" name="txtSearch" id="txtSearch" class="keyword" style="ime-mode:active" autocomplete="off">
+                        <p class="submit" onclick="javascript: location.href='/Book';"><a href="javascript:void(0);" value="쓰기"></a></p>
+                    </div>
+
+                </fieldset>
+                <input type="hidden" id="hidPageSize" name="hidPageSize" value="1" />
+            </form>
+        </div>
+    </div>
+</div>
+<div id="container">
+    <div id="containerleft">
+        <div class="search_bar">
+            <ul class="search_button">
+                @foreach (System.Data.DataRow row in LableList)
+                {
+                    <li style="padding-bottom:20px"><input type="reset" onclick="LabelSearch('@row["LabelName"]');" value="@row["LabelName"]"></li>
+                }
+            </ul>
+        </div>
+    </div>
+    <div id="containerright">
+        <div id="containerwrap">
+            <div class="divempty25"></div>
+            <!-- content start -->
+            <div id="contents">
+                <div class="search_result">
+                    <p class="result_txt"> <span class="txt1">“@SearchOptionView.TxtSearch”</span> 에 대한 검색 결과는 <span class="txt2"> @Model.BoardTotalCount </span>건 입니다.</p>
+                </div>
+                <div class="total_search">
+                    <ul class="search_result_detail_list">
+                        <li class="first">
+                            <dl class="search_result_category">
+                                @foreach (var item in Model.lstBoard)
+                                {
+                                    <dd class="sub">
+                                        <dl>
+                                            <dt><span class="smark3"><a href="/Book/Detail?Seq=@item.Seq&txtSearch=@HttpUtility.UrlEncode(SearchOptionView.TxtSearch)&hidPageSize=@Pagination.CurrentPage">[@item.LabelName]</a></span> <span class="smark2"><a href="/Book/Detail?Seq=@item.Seq&txtSearch=@HttpUtility.UrlEncode(SearchOptionView.TxtSearch)&hidPageSize=@Pagination.CurrentPage">@item.Subject</a></span><span class="smark">@item.RegDate.ToString("yyyy-MM-dd hh:mm")</span></dt>
+                                            <dd class="content">
+                                                <a href="/Book/Detail?Seq=@item.Seq&txtSearch=@HttpUtility.UrlEncode(SearchOptionView.TxtSearch)&hidPageSize=@Pagination.CurrentPage">@Functions.LengthLimit(@item.Comment)</a>
+                                            </dd>
+
+                                        </dl>
+                                    </dd>
+                                }
+                            </dl>
+                        </li>
+                    </ul>
+                </div>
+                <!-- pager -->
+                @if (Pagination.EndPage > 1)
+                {
+                    <div class="pagingWrap">
+                        <ul class="pagination">
+
+
+                            @if (Pagination.CurrentPage > 1)
+                            {
+                                <li>
+                                    <a href="javascript:void(0);" onclick="PagerSubmit('1');">First</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0);" onclick="PagerSubmit('@(Pagination.CurrentPage - 1)');">Previous</a>
+                                </li>
+                            }
+
+                            @for (var page = Pagination.StartPage; page <= Pagination.EndPage; page++)
+                            {
+                                <li>
+                                    <a href="javascript:void(0);" onclick="PagerSubmit('@page');" class="@(page == Pagination.CurrentPage ? "active" : "")">@page</a>
+                                </li>
+                            }
+
+                            @if (Pagination.CurrentPage < Pagination.TotalPages)
+                            {
+                                <li>
+                                    <a href="javascript:void(0);" onclick="PagerSubmit('@(Pagination.CurrentPage + 1)');">Next</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0);" onclick="PagerSubmit('@(Pagination.TotalPages)');">Last</a>
+                                </li>
+                            }
+
+
+                        </ul>
+                    </div>
+                }
+            </div>
+            <!-- content end -->
+            <div id="footerHeight"></div>
+        </div>
+    </div>
+</div>
+
+<script language="javascript" type="text/javascript">
+
+    var onSubmit = function () {
+
+        //if ($.trim($("#txtSearch").val()) == "") {
+        //    alert('검색어를 입력 하세요.');
+        //    return false;
+        //}
+
+        return true;
+    }
+
+    var SearchSubmit = function (index) {
+        document.sform.action = "/Search/Main";
+        $("#sform").submit();
+    }
+
+    var PagerSubmit = function (page) {
+        $("#txtSearch").val('@SearchOptionView.TxtSearch');
+        document.sform.action = "/Search/Main";
+        $("#hidPageSize").val(page);
+        $("#sform").submit();
+    }
+
+    $(document).ready(function () {
+
+    });
+</script>

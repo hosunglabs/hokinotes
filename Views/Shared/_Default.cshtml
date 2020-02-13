@@ -1,0 +1,25 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+
+    <title>hosungnotes</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="shortcut icon" type="image/x-icon" href="~/images/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/jquery-ui-1.11.0.custom/jquery-ui.css")" />
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/style.css?51")" />
+    @RenderSection("css", required: false)
+
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-1.9.1.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Content/jquery-ui-1.11.0.custom/jquery-ui.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-migrate-1.2.1.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/json2.js")"></script>
+    @RenderSection("headJS", required: false)
+
+</head>
+<body>
+    <div id="wrap">
+        @RenderBody()
+    </div>
+</body>
+</html>

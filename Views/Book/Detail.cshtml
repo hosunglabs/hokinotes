@@ -1,0 +1,60 @@
+﻿@{
+    ViewBag.Title = "hosungnotes detail";
+    Layout = "~/Views/Shared/_Write.cshtml";
+}
+
+@{
+    var SearchOptionView = ViewBag.SearchOption as hosungnotes.Models.SearchOptionView;
+}
+
+
+@model hosungnotes.Models.BoardT
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ko" lang="ko">
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+
+    <title> HosungNotes </title>
+    <script>
+
+        function GoDel() {
+            if (confirm('글을 삭제하시겠습니까?'))
+                location.href ="Delete?Seq=@Model.Seq&txtSearch=@HttpUtility.UrlEncode(SearchOptionView.TxtSearch)&hidPageSize=@SearchOptionView.PageSize";
+        }
+
+        function GoBack() {
+            location.href = "/Search/Main?txtSearch=@HttpUtility.UrlEncode(SearchOptionView.TxtSearch)&hidPageSize=@SearchOptionView.PageSize";
+        }
+    </script>
+</head>
+<body>
+
+    <div id="sub">
+        <form id="form1" runat="server">
+            <div class="boardarea">
+                <div class="board_table">
+                    <div class="view_titlearea">
+                        <div class="view_title">[@Model.LabelName] @Model.Subject</div>
+                        <div class="view_info">@Model.RegDate</div>
+                    </div>
+                    <div class="view_cont">
+                        @Html.Raw(@Model.Comment)
+                    </div>
+
+                </div>
+
+                <div style="margin:20px auto 0;text-align:right;">
+                    <img src="~/Images/write_1.png" style="width:45px;height:40px" onclick="javascript:location.href='Modify?Seq=@Model.Seq&txtSearch=@HttpUtility.UrlEncode(SearchOptionView.TxtSearch)&hidPageSize=@SearchOptionView.PageSize';" />
+                    &nbsp;<img src="~/Images/del2.png" style="width:40px;height:40px" onclick="GoDel();" />
+                    &nbsp;<img src="~/Images/back_1.png" style="width:30px;height:40px" onclick="GoBack();" />
+                </div>
+
+            </div>
+        </form>
+    </div>
+</body>
+</html>
